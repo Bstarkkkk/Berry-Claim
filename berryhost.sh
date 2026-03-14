@@ -1,6 +1,5 @@
 #!/bin/bash
 # ===== 个人配置（通过 GitHub Secrets 注入，无需修改）=====
-# DISCORD_TOKEN 和 SESSION_ID 从环境变量读取
 : "${DISCORD_TOKEN:?请设置 GitHub Secret: DISCORD_TOKEN}"
 : "${SESSION_ID:?请设置 GitHub Secret: SESSION_ID}"
 
@@ -8,7 +7,15 @@
 GUILD_ID="1453168143865352374"
 CHANNEL_ID="1453169471681200293"
 CUSTOM_ID="daily_claim_button"
-PROXY="-x http://127.0.0.1:8080"
+
+# ===== 代理配置（有 GOST_PROXY 时使用，否则直连）=====
+if [ -n "$GOST_PROXY" ]; then
+  PROXY="-x http://127.0.0.1:8080"
+  echo "🛡️ 使用代理模式"
+else
+  PROXY=""
+  echo "🌐 直连模式（GitHub Actions IP）"
+fi
 
 echo "🕐 运行时间: $(date '+%Y-%m-%d %H:%M:%S')"
 echo "🎮 TheBerryHost 每日领取"
